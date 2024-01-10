@@ -25,7 +25,6 @@ export default class TaskList extends Plugin {
 			id: "sort-list",
 			name: "Sort list",
 			editorCallback: async (editor) => {
-				editor.listSelections;
 				const view =
 					this.app.workspace.getActiveViewOfType(MarkdownView);
 
