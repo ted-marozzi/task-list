@@ -2,6 +2,7 @@ import { MarkdownView, Plugin } from "obsidian";
 import { remark } from "remark";
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
+import remarkGfm from "remark-gfm";
 
 export default class TaskList extends Plugin {
 	log(level: "info" | "warn" | "error", ...messages: Array<unknown>) {
@@ -17,7 +18,6 @@ export default class TaskList extends Plugin {
 				console.error(prefix, ...messages);
 				break;
 		}
-		console.info(messages);
 	}
 
 	async onload() {
@@ -39,9 +39,20 @@ export default class TaskList extends Plugin {
 				const originalMarkdown = editor.getDoc().getValue();
 
 				const modifiedMarkdownFile = await remark()
+					.use(remarkGfm)
 					.use(() => (mdast: Root) => {
 						visit(mdast, "list", (node) => {
-							console.log(node);
+							node.children.sort((a, b) => {
+								if (a.checked === true && !b.checked) {
+									return 1;
+								}
+
+								if (b.checked === true && !a.checked) {
+									return -1;
+								}
+
+								return 0;
+							});
 						});
 					})
 					.process(originalMarkdown);
