@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "task-list",
+	"name": "Task list",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "A simple obsidian plugin enabling better task management via lists.",
+	"author": "Ted Marozzi",
+	"authorUrl": "https://github.com/ted-marozzi",
+	"fundingUrl": "https://github.com/sponsors/ted-marozzi/",
 	"isDesktopOnly": false
 }

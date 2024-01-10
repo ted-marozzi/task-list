@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "task-list",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "A simple obsidian plugin enabling better task management via lists.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
