@@ -2,8 +2,8 @@ import { MarkdownView, type Command } from "obsidian";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import type TaskList from "./main";
-import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
+import type { Root } from "remark-gfm/lib";
 
 export function getSortListCommand(taskList: TaskList): Command {
 	return {
@@ -34,8 +34,8 @@ export function getSortListCommand(taskList: TaskList): Command {
 }
 
 function sortTasks() {
-	return (mdast: Root) => {
-		visit(mdast, "list", (node) => {
+	return (remarkRoot: Root) => {
+		visit(remarkRoot, "list", (node) => {
 			console.debug("node children", node.children);
 			node.children.sort((a, b) => {
 				if (a.checked === true && !b.checked) {
