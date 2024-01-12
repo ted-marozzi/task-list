@@ -10,13 +10,17 @@ export default class TaskList extends Plugin {
 
 	log(level: LogLevel, ...messages: Array<unknown>) {
 		const prefix = `[${this.manifest.name}]`;
-		log(prefix, level, messages);
+		logWithPrefix(prefix, level, ...messages);
 	}
 }
 
 type LogLevel = "info" | "warn" | "error";
 
-function log(prefix: string, level: LogLevel, ...messages: Array<unknown>) {
+function logWithPrefix(
+	prefix: string,
+	level: LogLevel,
+	...messages: Array<unknown>
+) {
 	switch (level) {
 		case "info":
 			console.log(prefix, ...messages);
