@@ -28,26 +28,27 @@ export function getSortListCommand(taskList: TaskList): Command {
 			const modifiedMarkdownFile = await remark()
 				.use(remarkGfm)
 				.use(remarkDirective)
-				.use(() => sortTasks(taskList))
+				.use(sortTasks)
 				.process(originalMarkdown);
 
 			editor.setValue(modifiedMarkdownFile.toString());
 		},
 	};
 }
+
 type SortPriority = 1 | 2 | 3 | 4 | 5;
-const listItemStates = ["doing", "todo", "paused", "done", "none"] as const;
+const listItemStates = ["doing", "to-do", "paused", "done", "none"] as const;
 type ListItemState = (typeof listItemStates)[number];
 
 const sortOrder = new Map<ListItemState, SortPriority>([
 	["doing", 1],
-	["todo", 2],
+	["to-do", 2],
 	["paused", 3],
 	["done", 4],
 	["none", 5],
 ]);
 
-function sortTasks(taskList: TaskList) {
+function sortTasks() {
 	return (root: Root) => {
 		visit(root, "list", (node) => {
 			node.children.sort((a, b) => {
@@ -77,18 +78,15 @@ declare module "mdast" {
 
 function getState(listItem: ListItem): ListItemState {
 	if (
+		(listItem.checked === null || listItem.checked === undefined) &&
 		listItem.children.length > 0 &&
 		listItem.children[0].type === "paragraph" &&
 		listItem.children[0].children.length > 0 &&
 		listItem.children[0].children[0].type === "textDirective"
 	) {
-		const state: ListItemState | string = listItem.children[0].children[0].name;
-		switch (state) {
-			case "doing":
-			case "todo":
-			case "paused":
-			case "done":
-				return state;
+		const state = listItem.children[0].children[0].name;
+		if ((listItemStates as ReadonlyArray<string>).includes(state)) {
+			return state as ListItemState;
 		}
 	}
 
