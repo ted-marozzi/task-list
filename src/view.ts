@@ -1,11 +1,8 @@
 import { Menu, setIcon } from "obsidian";
-import {
-	taskStates,
-	type TaskStateName,
-	getTaskState as getTaskStateName,
-} from "./task_state";
+import { taskStates, type TaskStateName, getTaskState as getTaskStateName } from "./task_state";
+import type TaskList from "./main";
 
-export function renderTaskListBoxes(element: HTMLElement) {
+export function renderTaskListBoxes(taskList: TaskList, element: HTMLElement) {
 	const listItems = element.findAll("li");
 
 	for (const listItem of listItems) {
@@ -35,7 +32,7 @@ export function renderTaskListBoxes(element: HTMLElement) {
 							item
 								.setTitle(taskState.contextMenu.title)
 								.setIcon(taskState.iconName)
-								.onClick(taskState.contextMenu.onClick)
+								.onClick((ev) => taskState.contextMenu.onClick(taskList, ev))
 						);
 					}
 				}
@@ -59,10 +56,7 @@ function getTaskStateIconBox(taskState: TaskStateName) {
 	if (iconName !== null) {
 		setIcon(iconBox, iconName);
 	} else {
-		const emptyIcon = document.createElementNS(
-			"http://www.w3.org/2000/svg",
-			"svg"
-		);
+		const emptyIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		emptyIcon.setAttributeNS("http://www.w3.org/2000/svg", "width", "24");
 		emptyIcon.setAttributeNS("http://www.w3.org/2000/svg", "height", "24");
 		emptyIcon.addClass("svg-icon");

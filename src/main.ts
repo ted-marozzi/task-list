@@ -5,7 +5,7 @@ import { renderTaskListBoxes } from "./view";
 export default class TaskList extends Plugin {
 	async onload() {
 		this.addCommand(getSortListCommand(this));
-		this.registerMarkdownPostProcessor(renderTaskListBoxes);
+		this.registerMarkdownPostProcessor((element) => renderTaskListBoxes(this, element));
 	}
 
 	onunload() {}
@@ -18,11 +18,7 @@ export default class TaskList extends Plugin {
 
 type LogLevel = "info" | "warn" | "error";
 
-function logWithPrefix(
-	prefix: string,
-	level: LogLevel,
-	...messages: Array<unknown>
-) {
+function logWithPrefix(prefix: string, level: LogLevel, ...messages: Array<unknown>) {
 	switch (level) {
 		case "info":
 			console.log(prefix, ...messages);

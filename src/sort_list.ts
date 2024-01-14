@@ -26,10 +26,7 @@ export function getSortListCommand(taskList: TaskList): Command {
 		editorCallback: async (editor) => {
 			const view = taskList.app.workspace.getActiveViewOfType(MarkdownView);
 			if (view === null) {
-				taskList.log(
-					"info",
-					"Unable to Sort lists as the current file is not a markdown file."
-				);
+				taskList.log("info", "Unable to Sort lists as the current file is not a markdown file.");
 				return;
 			}
 
