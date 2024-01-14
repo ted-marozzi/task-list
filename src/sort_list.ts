@@ -6,6 +6,18 @@ import type TaskList from "./main";
 import { visit } from "unist-util-visit";
 import type { Root } from "remark-gfm/lib";
 import type { ListItem } from "mdast";
+import { taskStates, type TaskStateName } from "./task_state";
+
+declare module "mdast" {
+	interface PhrasingContentMap {
+		textDirective: TextDirective;
+	}
+}
+
+type TextDirective = {
+	type: "textDirective";
+	name: string;
+};
 
 export function getSortListCommand(taskList: TaskList): Command {
 	return {
@@ -36,28 +48,27 @@ export function getSortListCommand(taskList: TaskList): Command {
 	};
 }
 
-type SortPriority = 1 | 2 | 3 | 4 | 5;
-const listItemStates = ["doing", "to-do", "paused", "done", "none"] as const;
-type ListItemState = (typeof listItemStates)[number];
-
-const sortOrder = new Map<ListItemState, SortPriority>([
-	["doing", 1],
-	["to-do", 2],
-	["paused", 3],
-	["done", 4],
-	["none", 5],
-]);
-
 function sortTasks() {
 	return (root: Root) => {
 		visit(root, "list", (node) => {
 			node.children.sort((a, b) => {
-				const sortOrderA = sortOrder.get(getState(a));
-				const sortOrderB = sortOrder.get(getState(b));
+				const stateA = getState(a);
+				const stateB = getState(b);
 
-				if (sortOrderA === undefined || sortOrderB === undefined) {
+				if (stateA === stateB) {
 					return 0;
 				}
+
+				if (stateA === null) {
+					return 1;
+				}
+
+				if (stateB === null) {
+					return -1;
+				}
+
+				const sortOrderA = taskStates[stateA].sortOrder;
+				const sortOrderB = taskStates[stateB].sortOrder;
 
 				return sortOrderA - sortOrderB;
 			});
@@ -65,18 +76,7 @@ function sortTasks() {
 	};
 }
 
-type TextDirective = {
-	type: "textDirective";
-	name: string;
-};
-
-declare module "mdast" {
-	interface PhrasingContentMap {
-		textDirective: TextDirective;
-	}
-}
-
-function getState(listItem: ListItem): ListItemState {
+function getState(listItem: ListItem): TaskStateName | null {
 	if (
 		(listItem.checked === null || listItem.checked === undefined) &&
 		listItem.children.length > 0 &&
@@ -85,10 +85,10 @@ function getState(listItem: ListItem): ListItemState {
 		listItem.children[0].children[0].type === "textDirective"
 	) {
 		const state = listItem.children[0].children[0].name;
-		if ((listItemStates as ReadonlyArray<string>).includes(state)) {
-			return state as ListItemState;
+		if (state in taskStates) {
+			return state as TaskStateName;
 		}
 	}
 
-	return "none";
+	return null;
 }

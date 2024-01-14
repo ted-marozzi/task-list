@@ -1,0 +1,62 @@
+:root {
+	--checkbox-margin-end: 0.6em;
+	--icon-size-xxs: 12px;
+}
+
+.task-state-icon-box {
+	height: var(--checkbox-size);
+	width: var(--checkbox-size);
+	border-radius: var(--checkbox-radius);
+
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+	margin-inline-start: calc(var(--checkbox-size) * -1.5);
+	margin-inline-end: var(--checkbox-margin-end);
+}
+
+/* Done icon is mostly purple to provide a strong visual indication that the task is complete */
+.task-state-icon-box[data-state="done"] {
+	color: var(--checkbox-marker-color);
+	background-color: var(--interactive-accent);
+}
+
+.task-state-icon-box[data-state="done"]:hover {
+	background-color: var(--interactive-accent-hover);
+}
+
+/* Styling for all other icon boxes */
+.task-state-icon-box:not([data-state="done"]) {
+	color: var(--interactive-accent);
+	background-color: var(--checkbox-marker-color);
+
+	border: 1px solid var(--checkbox-border-color);
+}
+
+.task-state-icon-box:not([data-state="done"]):hover {
+	color: var(--interactive-accent-hover);
+
+	border-color: var(--checkbox-border-color-hover);
+}
+
+/* Styling for all icon boxes */
+.task-state-icon-box svg.svg-icon {
+	--icon-size: var(--icon-size-xxs);
+}
+
+/* Styling for individual icon boxes */
+.task-state-icon-box[data-state="to-do"] svg.svg-icon {
+}
+
+.task-state-icon-box[data-state="doing"] svg.svg-icon {
+	--icon-stroke: 3px;
+}
+
+.task-state-icon-box[data-state="paused"] svg.svg-icon {
+	fill: currentColor;
+}
+
+.task-state-icon-box[data-state="done"] svg.svg-icon {
+	--icon-stroke: 3px;
+}

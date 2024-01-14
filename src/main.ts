@@ -1,9 +1,11 @@
 import { Plugin } from "obsidian";
 import { getSortListCommand } from "./sort_list";
+import { renderTaskListBoxes } from "./view";
 
 export default class TaskList extends Plugin {
 	async onload() {
 		this.addCommand(getSortListCommand(this));
+		this.registerMarkdownPostProcessor(renderTaskListBoxes);
 	}
 
 	onunload() {}
