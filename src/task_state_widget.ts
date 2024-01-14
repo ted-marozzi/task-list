@@ -10,6 +10,8 @@ export type TaskStateWidgetConstructorArgs = {
 	directiveRange: EditorRange;
 };
 
+// TODO: try fix this with: https://github.com/erincayaz/obsidian-colored-text/blob/main/src/textFormatting.ts
+
 export class TaskStateWidget extends WidgetType {
 	taskStateName;
 	taskState;

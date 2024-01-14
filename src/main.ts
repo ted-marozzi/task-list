@@ -1,12 +1,12 @@
 import { Plugin } from "obsidian";
 import { getSortListCommand } from "./sort_list";
-import { taskStateViewPlugin } from "./task_state_view_plugin";
 import { logWithPrefix, type LogLevel } from "./log";
+import { getTaskStateField } from "./task_state_state_plugin";
 
 export default class TaskList extends Plugin {
 	async onload() {
 		this.addCommand(getSortListCommand(this));
-		this.registerEditorExtension(taskStateViewPlugin);
+		this.registerEditorExtension(getTaskStateField({ taskList: this }));
 	}
 
 	onunload() {}
