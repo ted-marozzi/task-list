@@ -7,10 +7,7 @@ type TaskState = {
 	nextState: TaskStateName;
 	sortOrder: OrderPriority;
 	iconName: null | "loader" | "pause" | "check";
-	contextMenu: {
-		title: string;
-		onClick: (taskList: TaskList, title: string) => unknown;
-	};
+	contextMenuTitle: string;
 };
 
 export const taskStates: Record<string, TaskState> = {
@@ -18,28 +15,25 @@ export const taskStates: Record<string, TaskState> = {
 		nextState: "doing",
 		sortOrder: 2,
 		iconName: null,
-		contextMenu: {
-			title: "Mark 'To do'",
-			onClick: (taskList, title) => {},
-		},
+		contextMenuTitle: "Mark 'To do'",
 	},
 	["doing"]: {
-		nextState: "paused",
+		nextState: "done",
 		sortOrder: 1,
 		iconName: "loader",
-		contextMenu: { title: "Mark 'Doing'", onClick: () => {} },
+		contextMenuTitle: "Mark 'Doing'",
 	},
 	["paused"]: {
-		nextState: "done",
+		nextState: "to-do",
 		sortOrder: 3,
 		iconName: "pause",
-		contextMenu: { title: "Mark 'Paused'", onClick: () => {} },
+		contextMenuTitle: "Mark 'Paused'",
 	},
 	["done"]: {
 		nextState: "to-do",
 		sortOrder: 4,
 		iconName: "check",
-		contextMenu: { title: "Mark 'Done'", onClick: () => {} },
+		contextMenuTitle: "Mark 'Done'",
 	},
 } as const;
 
@@ -50,11 +44,11 @@ export function getTaskState(taskStateDirective: TaskStateDirective): TaskStateN
 	return taskStateDirective.substring(1) as TaskStateName;
 }
 
-export function setTaskState(taskList: TaskList, taskStateName: TaskStateName) {
-	const title = taskStates[taskStateName].contextMenu.title;
+export async function setTaskState(taskList: TaskList, taskStateName: TaskStateName) {
+	const title = taskStates[taskStateName].contextMenuTitle;
 
-	const editor = taskList.app.workspace.activeEditor;
-	if (editor === null) {
+	const editor = taskList.app.workspace.activeEditor?.editor;
+	if (editor === undefined) {
 		taskList.log("info", `Unable to ${title} as there is no active editor.`);
 		return;
 	}
@@ -66,4 +60,14 @@ export function setTaskState(taskList: TaskList, taskStateName: TaskStateName) {
 	}
 
 	taskList.log("info", `Running ${title}`);
+
+	// const originalMarkdown = editor.getDoc().getValue();
+
+	// const modifiedMarkdownFile = await remark()
+	// 	.use(remarkGfm)
+	// 	.use(remarkDirective)
+	// 	.use(sortTasks)
+	// 	.process(originalMarkdown);
+
+	// editor.setValue(modifiedMarkdownFile.toString());
 }

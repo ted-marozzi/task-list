@@ -2,6 +2,7 @@ import { Plugin } from "obsidian";
 import { getSortListCommand } from "./sort_list";
 import { renderTaskListBoxes } from "./view";
 
+// TODO: will need an editor extension
 export default class TaskList extends Plugin {
 	async onload() {
 		this.addCommand(getSortListCommand(this));

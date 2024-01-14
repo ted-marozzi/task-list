@@ -1,5 +1,10 @@
 import { Menu, setIcon } from "obsidian";
-import { taskStates, type TaskStateName, getTaskState as getTaskStateName } from "./task_state";
+import {
+	taskStates,
+	type TaskStateName,
+	getTaskState as getTaskStateName,
+	setTaskState,
+} from "./task_state";
 import type TaskList from "./main";
 
 export function renderTaskListBoxes(taskList: TaskList, element: HTMLElement) {
@@ -30,9 +35,9 @@ export function renderTaskListBoxes(taskList: TaskList, element: HTMLElement) {
 					if (taskStateName !== currentTaskStateName) {
 						menu.addItem((item) =>
 							item
-								.setTitle(taskState.contextMenu.title)
+								.setTitle(taskState.contextMenuTitle)
 								.setIcon(taskState.iconName)
-								.onClick((ev) => taskState.contextMenu.onClick(taskList, ev))
+								.onClick(() => setTaskState(taskList, taskStateName))
 						);
 					}
 				}
@@ -40,7 +45,9 @@ export function renderTaskListBoxes(taskList: TaskList, element: HTMLElement) {
 				iconBox.oncontextmenu = (ev) => {
 					menu.showAtMouseEvent(ev);
 				};
-				iconBox.onClickEvent((ev) => {});
+				iconBox.onClickEvent((ev) => {
+					setTaskState(taskList, taskStates[currentTaskStateName].nextState);
+				});
 				break;
 			}
 			default:
