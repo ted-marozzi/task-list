@@ -3,8 +3,8 @@ import type TaskList from "./main";
 
 type OrderPriority = 1 | 2 | 3 | 4;
 
-type TaskState = {
-	nextState: TaskStateName;
+export type TaskState = {
+	nextStateName: TaskStateName;
 	sortOrder: OrderPriority;
 	iconName: null | "loader" | "pause" | "check";
 	contextMenuTitle: string;
@@ -12,25 +12,25 @@ type TaskState = {
 
 export const taskStates: Record<string, TaskState> = {
 	["to-do"]: {
-		nextState: "doing",
+		nextStateName: "doing",
 		sortOrder: 2,
 		iconName: null,
 		contextMenuTitle: "Mark 'To do'",
 	},
 	["doing"]: {
-		nextState: "done",
+		nextStateName: "done",
 		sortOrder: 1,
 		iconName: "loader",
 		contextMenuTitle: "Mark 'Doing'",
 	},
 	["paused"]: {
-		nextState: "to-do",
+		nextStateName: "to-do",
 		sortOrder: 3,
 		iconName: "pause",
 		contextMenuTitle: "Mark 'Paused'",
 	},
 	["done"]: {
-		nextState: "to-do",
+		nextStateName: "to-do",
 		sortOrder: 4,
 		iconName: "check",
 		contextMenuTitle: "Mark 'Done'",

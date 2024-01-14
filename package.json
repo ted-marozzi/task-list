@@ -13,6 +13,8 @@
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@codemirror/language": "^6.10.0",
+		"@codemirror/view": "^6.23.0",
 		"remark": "^15.0.1",
 		"remark-directive": "^3.0.0",
 		"remark-gfm": "^4.0.0",
