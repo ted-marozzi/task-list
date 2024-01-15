@@ -12,8 +12,8 @@
 	justify-content: center;
 	align-items: center;
 
-	margin-inline-start: calc(var(--checkbox-size) * -1.5);
-	margin-inline-end: var(--checkbox-margin-end);
+	/* margin-inline-start: calc(var(--checkbox-size) * -1.5); */
+	/* margin-inline-end: var(--checkbox-margin-end); */
 }
 
 /* Done icon is mostly purple to provide a strong visual indication that the task is complete */

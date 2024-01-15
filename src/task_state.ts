@@ -1,9 +1,7 @@
-import { MarkdownView } from "obsidian";
-import type TaskList from "./main";
-
 type OrderPriority = 1 | 2 | 3 | 4;
 
 export type TaskState = {
+	name: TaskStateName;
 	nextStateName: TaskStateName;
 	sortOrder: OrderPriority;
 	iconName: null | "loader" | "pause" | "check";
@@ -12,24 +10,28 @@ export type TaskState = {
 
 export const taskStates: Record<string, TaskState> = {
 	["to-do"]: {
+		name: "to-do",
 		nextStateName: "doing",
 		sortOrder: 2,
 		iconName: null,
 		contextMenuTitle: "Mark 'To do'",
 	},
 	["doing"]: {
+		name: "doing",
 		nextStateName: "done",
 		sortOrder: 1,
 		iconName: "loader",
 		contextMenuTitle: "Mark 'Doing'",
 	},
 	["paused"]: {
+		name: "paused",
 		nextStateName: "to-do",
 		sortOrder: 3,
 		iconName: "pause",
 		contextMenuTitle: "Mark 'Paused'",
 	},
 	["done"]: {
+		name: "done",
 		nextStateName: "to-do",
 		sortOrder: 4,
 		iconName: "check",
@@ -40,34 +42,10 @@ export const taskStates: Record<string, TaskState> = {
 export type TaskStateName = keyof typeof taskStates;
 export type TaskStateDirective = `:${TaskStateName}`;
 
-export function getTaskState(taskStateDirective: TaskStateDirective): TaskStateName {
+export function getTaskStateName(taskStateDirective: TaskStateDirective): TaskStateName {
 	return taskStateDirective.substring(1) as TaskStateName;
 }
 
-export async function setTaskState(taskList: TaskList, taskStateName: TaskStateName) {
-	const title = taskStates[taskStateName].contextMenuTitle;
-
-	const editor = taskList.app.workspace.activeEditor?.editor;
-	if (editor === undefined) {
-		taskList.log("info", `Unable to ${title} as there is no active editor.`);
-		return;
-	}
-
-	const view = taskList.app.workspace.getActiveViewOfType(MarkdownView);
-	if (view === null) {
-		taskList.log("info", `Unable to ${title} as the current file is not a markdown file.`);
-		return;
-	}
-
-	taskList.log("info", `Running ${title}`);
-
-	// const originalMarkdown = editor.getDoc().getValue();
-
-	// const modifiedMarkdownFile = await remark()
-	// 	.use(remarkGfm)
-	// 	.use(remarkDirective)
-	// 	.use(sortTasks)
-	// 	.process(originalMarkdown);
-
-	// editor.setValue(modifiedMarkdownFile.toString());
+export function getTaskStateDirective(taskStateName: TaskStateName): TaskStateDirective {
+	return `:${taskStateName}`;
 }

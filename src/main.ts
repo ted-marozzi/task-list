@@ -1,18 +1,19 @@
 import { Plugin } from "obsidian";
 import { getSortListCommand } from "./sort_list";
-import { logWithPrefix, type LogLevel } from "./log";
-import { getTaskStateField } from "./task_state_state_plugin";
+import { logWithNamespace, type LogLevel } from "./log";
+import { taskStateViewPlugin } from "./task_state_view_plugin";
 
 export default class TaskList extends Plugin {
+	name = this.manifest.name;
 	async onload() {
 		this.addCommand(getSortListCommand(this));
-		this.registerEditorExtension(getTaskStateField({ taskList: this }));
+		this.registerEditorExtension(taskStateViewPlugin);
 	}
 
 	onunload() {}
 
 	log(level: LogLevel, ...messages: Array<unknown>) {
-		const prefix = `[${this.manifest.name}]`;
-		logWithPrefix(prefix, level, ...messages);
+		const namespace = `[${this.name}]`;
+		logWithNamespace(namespace, level, ...messages);
 	}
 }

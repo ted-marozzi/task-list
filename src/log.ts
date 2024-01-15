@@ -1,15 +1,17 @@
 export type LogLevel = "info" | "warn" | "error";
 
-export function logWithPrefix(prefix: string, level: LogLevel, ...messages: Array<unknown>) {
+const appName = "[Task list]";
+
+export function logWithNamespace(namespace: string, level: LogLevel, ...messages: Array<unknown>) {
 	switch (level) {
 		case "info":
-			console.log(prefix, ...messages);
+			console.log(appName, namespace, ...messages);
 			break;
 		case "warn":
-			console.warn(prefix, ...messages);
+			console.warn(appName, namespace, ...messages);
 			break;
 		case "error":
-			console.error(prefix, ...messages);
+			console.error(appName, namespace, ...messages);
 			break;
 	}
 }

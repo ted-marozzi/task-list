@@ -1,41 +1,28 @@
 import { EditorView, WidgetType } from "@codemirror/view";
 import { taskStates, type TaskStateName, type TaskState } from "./task_state";
 import { Menu, setIcon, type EditorRange } from "obsidian";
-import type TaskList from "./main";
+import { type LogLevel, logWithNamespace } from "./log";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
-	text: string;
-	taskList: TaskList;
 	directiveRange: EditorRange;
 };
 
-// TODO: try fix this with: https://github.com/erincayaz/obsidian-colored-text/blob/main/src/textFormatting.ts
-
 export class TaskStateWidget extends WidgetType {
+	name = "TaskStateWidget";
 	taskStateName;
 	taskState;
-	text;
-	taskList;
-	directiveRange: EditorRange;
+	directiveRange;
 
-	constructor({ taskStateName, text, taskList, directiveRange }: TaskStateWidgetConstructorArgs) {
+	constructor({ taskStateName, directiveRange }: TaskStateWidgetConstructorArgs) {
 		super();
 		this.taskStateName = taskStateName;
 		this.taskState = taskStates[this.taskStateName];
-		this.text = text;
-		this.taskList = taskList;
 		this.directiveRange = directiveRange;
 	}
 
-	toDOM(_: EditorView): HTMLElement {
-		const listItem = document.createElement("li");
-
-		listItem.innerText = this.text;
-		listItem.style.display = "block";
-
+	toDOM(editorView: EditorView): HTMLElement {
 		const iconBox = this.getTaskStateIconBox();
-		listItem.prepend(iconBox);
 
 		const menu = new Menu();
 
@@ -49,7 +36,7 @@ export class TaskStateWidget extends WidgetType {
 					.setTitle(taskState.contextMenuTitle)
 					.setIcon(taskState.iconName)
 					.onClick(() => {
-						this.replaceDirective(taskStateName, taskState);
+						this.replaceDirective(editorView, taskStateName, taskState);
 					})
 			);
 		}
@@ -58,22 +45,18 @@ export class TaskStateWidget extends WidgetType {
 			menu.showAtMouseEvent(ev);
 		};
 		iconBox.onClickEvent(() => {
-			this.replaceDirective(this.taskState.nextStateName, taskStates[this.taskState.nextStateName]);
+			this.replaceDirective(
+				editorView,
+				this.taskState.nextStateName,
+				taskStates[this.taskState.nextStateName]
+			);
 		});
 
-		return listItem;
+		return iconBox;
 	}
 
-	replaceDirective(taskStateName: TaskStateName, taskState: TaskState) {
-		const editor = this.taskList.app.workspace.activeEditor?.editor;
-		if (editor === undefined) {
-			this.taskList.log(
-				"info",
-				`Unable to ${taskState.contextMenuTitle} as there is no active editor.`
-			);
-			return;
-		}
-		editor.replaceRange(`:${taskStateName}`, this.directiveRange.from, this.directiveRange.to);
+	replaceDirective(editorView: EditorView, taskStateName: TaskStateName, taskState: TaskState) {
+		// TODO:
 	}
 
 	getTaskStateIconBox() {
@@ -94,5 +77,10 @@ export class TaskStateWidget extends WidgetType {
 		iconBox.dataset.state = this.taskStateName;
 
 		return iconBox;
+	}
+
+	log(level: LogLevel, ...messages: Array<unknown>) {
+		const namespace = `[${this.name}]`;
+		logWithNamespace(namespace, level, ...messages);
 	}
 }

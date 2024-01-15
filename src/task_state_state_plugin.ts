@@ -20,7 +20,6 @@ export function getTaskStateField({ taskList }: { taskList: TaskList }) {
 							node.to,
 							Decoration.replace({
 								widget: new TaskStateWidget({
-									taskList,
 									taskStateName: "doing",
 									text: "a",
 									directiveRange: { from: { ch: 2, line: 12 }, to: { ch: 12, line: 12 } },
