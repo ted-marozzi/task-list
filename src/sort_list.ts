@@ -34,6 +34,7 @@ export function getSortListCommand(taskList: TaskList): Command {
 
 			const originalMarkdown = editor.getDoc().getValue();
 
+			// TODO: can we use the cm ast?
 			const modifiedMarkdownFile = await remark()
 				.use(remarkGfm)
 				.use(remarkDirective)

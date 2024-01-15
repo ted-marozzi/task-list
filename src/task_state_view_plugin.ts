@@ -21,7 +21,7 @@ class TaskStateViewValue implements PluginValue {
 	}
 
 	update(viewUpdate: ViewUpdate) {
-		if (viewUpdate.docChanged || viewUpdate.viewportChanged) {
+		if (viewUpdate.docChanged || viewUpdate.viewportChanged || viewUpdate.selectionSet) {
 			this.decorations = this.buildDecorations(viewUpdate.view);
 		}
 	}
@@ -41,21 +41,37 @@ class TaskStateViewValue implements PluginValue {
 					}
 					const listItemText = editorView.state.doc.slice(node.from, node.to).toString();
 
-					for (const { name } of Object.values(taskStates)) {
-						const taskStateDirective = getTaskStateDirective(name);
-						if (!listItemText.startsWith(taskStateDirective)) {
-							continue;
-						}
+					const taskState = Object.values(taskStates).find(({ name }) =>
+						listItemText.trimStart().startsWith(getTaskStateDirective(name))
+					);
 
-						console.log("Text:", listItemText);
+					if (taskState === undefined) {
+						return;
+					}
 
+					const directive = getTaskStateDirective(taskState.name);
+
+					const selection = editorView.state.selection.main;
+
+					const directiveFrom = node.from;
+					const directiveTo = node.from + listItemText.indexOf(directive) + directive.length;
+
+					const isBetween = (point: number, from: number, to: number) =>
+						point >= from && point <= to;
+
+					const isPartiallySelected =
+						isBetween(selection.from, directiveFrom, directiveTo) ||
+						isBetween(selection.to, directiveFrom, directiveTo) ||
+						(selection.from <= directiveFrom && selection.to >= directiveTo);
+
+					if (!isPartiallySelected) {
 						builder.add(
-							node.from,
-							node.from + taskStateDirective.length,
+							directiveFrom,
+							directiveTo,
 							Decoration.replace({
 								widget: new TaskStateWidget({
-									directiveRange: { from: { ch: 1, line: 1 }, to: { ch: 2, line: 1 } },
-									taskStateName: name,
+									directiveRange: { from: { ch: 1, line: 1 }, to: { ch: 2, line: 1 } }, // TODO
+									taskStateName: taskState.name,
 								}),
 							})
 						);
