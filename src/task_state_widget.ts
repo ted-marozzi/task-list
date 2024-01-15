@@ -1,11 +1,16 @@
 import { EditorView, WidgetType } from "@codemirror/view";
-import { taskStates, type TaskStateName, type TaskState } from "./task_state";
-import { Menu, setIcon, type EditorRange } from "obsidian";
+import {
+	taskStates,
+	type TaskStateName,
+	type TaskStateDirective,
+	getTaskStateDirective,
+} from "./task_state";
+import { Menu, setIcon } from "obsidian";
 import { type LogLevel, logWithNamespace } from "./log";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
-	directiveRange: EditorRange;
+	directiveRange: { from: number; to: number };
 };
 
 export class TaskStateWidget extends WidgetType {
@@ -36,7 +41,7 @@ export class TaskStateWidget extends WidgetType {
 					.setTitle(taskState.contextMenuTitle)
 					.setIcon(taskState.iconName)
 					.onClick(() => {
-						this.replaceDirective(editorView, taskStateName, taskState);
+						this.replaceDirective(editorView, getTaskStateDirective(taskStateName));
 					})
 			);
 		}
@@ -45,18 +50,20 @@ export class TaskStateWidget extends WidgetType {
 			menu.showAtMouseEvent(ev);
 		};
 		iconBox.onClickEvent(() => {
-			this.replaceDirective(
-				editorView,
-				this.taskState.nextStateName,
-				taskStates[this.taskState.nextStateName]
-			);
+			this.replaceDirective(editorView, getTaskStateDirective(this.taskState.nextStateName));
 		});
 
 		return iconBox;
 	}
 
-	replaceDirective(editorView: EditorView, taskStateName: TaskStateName, taskState: TaskState) {
-		// TODO:
+	replaceDirective(editorView: EditorView, taskStateDirective: TaskStateDirective) {
+		editorView.dispatch({
+			changes: {
+				insert: taskStateDirective,
+				from: this.directiveRange.from,
+				to: this.directiveRange.to,
+			},
+		});
 	}
 
 	getTaskStateIconBox() {

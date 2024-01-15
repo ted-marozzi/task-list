@@ -53,24 +53,26 @@ class TaskStateViewValue implements PluginValue {
 
 					const selection = editorView.state.selection.main;
 
-					const directiveFrom = node.from;
-					const directiveTo = node.from + listItemText.indexOf(directive) + directive.length;
+					const directiveRange = {
+						from: node.from,
+						to: node.from + listItemText.indexOf(directive) + directive.length,
+					};
 
 					const isBetween = (point: number, from: number, to: number) =>
 						point >= from && point <= to;
 
 					const isPartiallySelected =
-						isBetween(selection.from, directiveFrom, directiveTo) ||
-						isBetween(selection.to, directiveFrom, directiveTo) ||
-						(selection.from <= directiveFrom && selection.to >= directiveTo);
+						isBetween(selection.from, directiveRange.from, directiveRange.to) ||
+						isBetween(selection.to, directiveRange.from, directiveRange.to) ||
+						(selection.from <= directiveRange.from && selection.to >= directiveRange.to);
 
 					if (!isPartiallySelected) {
 						builder.add(
-							directiveFrom,
-							directiveTo,
+							directiveRange.from,
+							directiveRange.to,
 							Decoration.replace({
 								widget: new TaskStateWidget({
-									directiveRange: { from: { ch: 1, line: 1 }, to: { ch: 2, line: 1 } }, // TODO
+									directiveRange,
 									taskStateName: taskState.name,
 								}),
 							})
