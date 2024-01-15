@@ -7,6 +7,7 @@ import { visit } from "unist-util-visit";
 import type { Root } from "remark-gfm/lib";
 import type { ListItem } from "mdast";
 import { taskStates, type TaskStateName } from "./task_state";
+import { logWithNamespace, type LogLevel } from "./log";
 
 declare module "mdast" {
 	interface PhrasingContentMap {
@@ -19,31 +20,31 @@ type TextDirective = {
 	name: string;
 };
 
-export function getSortListCommand(taskList: TaskList): Command {
+export function getSortTaskListCommand(taskList: TaskList): Command {
 	return {
 		id: "sort-list",
 		name: "Sort list",
 		editorCallback: async (editor) => {
 			const view = taskList.app.workspace.getActiveViewOfType(MarkdownView);
 			if (view === null) {
-				taskList.log("info", "Unable to Sort lists as the current file is not a markdown file.");
+				log("info", "Unable to Sort lists as the current file is not a markdown file.");
 				return;
 			}
-
-			taskList.log("info", "Running command");
-
-			const originalMarkdown = editor.getDoc().getValue();
-
-			// TODO: can we use the cm ast?
-			const modifiedMarkdownFile = await remark()
-				.use(remarkGfm)
-				.use(remarkDirective)
-				.use(sortTasks)
-				.process(originalMarkdown);
-
-			editor.setValue(modifiedMarkdownFile.toString());
+			editor.setValue(await sortTaskList(editor.getDoc().getValue()));
 		},
 	};
+}
+
+export async function sortTaskList(document: string) {
+	log("info", "Running command");
+
+	const modifiedMarkdownFile = await remark()
+		.use(remarkGfm)
+		.use(remarkDirective)
+		.use(sortTasks)
+		.process(document);
+
+	return modifiedMarkdownFile.toString();
 }
 
 function sortTasks() {
@@ -89,4 +90,9 @@ function getState(listItem: ListItem): TaskStateName | null {
 	}
 
 	return null;
+}
+
+function log(level: LogLevel, ...messages: Array<unknown>) {
+	const namespace = `[Sort list]`;
+	logWithNamespace(namespace, level, ...messages);
 }

@@ -12,6 +12,7 @@ import {
 import { TaskStateWidget } from "./task_state_widget";
 import { type LogLevel, logWithNamespace } from "./log";
 import { getTaskStateDirective, taskStates } from "./task_state";
+import { isValidList } from "./base";
 
 class TaskStateViewValue implements PluginValue {
 	name = "TaskStateViewValue";
@@ -21,7 +22,7 @@ class TaskStateViewValue implements PluginValue {
 		this.decorations = this.buildDecorations(editorView);
 	}
 
-	update(viewUpdate: ViewUpdate) {
+	async update(viewUpdate: ViewUpdate) {
 		if (viewUpdate.docChanged || viewUpdate.viewportChanged || viewUpdate.selectionSet) {
 			this.decorations = this.buildDecorations(viewUpdate.view);
 		}
@@ -37,11 +38,10 @@ class TaskStateViewValue implements PluginValue {
 				from,
 				to,
 				enter(node) {
-					if (!node.type.name.startsWith("list")) {
+					if (!isValidList(node)) {
 						return;
 					}
 					const listItemText = editorView.state.doc.slice(node.from, node.to).toString();
-
 					const taskState = Object.values(taskStates).find(({ name }) =>
 						listItemText.trimStart().startsWith(getTaskStateDirective(name))
 					);
@@ -54,9 +54,11 @@ class TaskStateViewValue implements PluginValue {
 
 					const selection = editorView.state.selection.main;
 
+					const indexOfDirective = listItemText.indexOf(directive);
+
 					const directiveRange = {
-						from: node.from,
-						to: node.from + listItemText.indexOf(directive) + directive.length,
+						from: node.from + indexOfDirective,
+						to: node.from + indexOfDirective + directive.length,
 					};
 
 					const isBetween = (point: number, from: number, to: number) =>

@@ -1,13 +1,12 @@
 import { Plugin } from "obsidian";
-import { getSortListCommand } from "./sort_list";
 import { logWithNamespace, type LogLevel } from "./log";
 import { taskStateViewPlugin } from "./task_state_view_plugin";
+import { getSortTaskListCommand } from "./sort_list";
 
-// TODO: Can we change the reading view render
 export default class TaskList extends Plugin {
 	name = this.manifest.name;
 	async onload() {
-		this.addCommand(getSortListCommand(this));
+		this.addCommand(getSortTaskListCommand(this));
 		this.registerEditorExtension(taskStateViewPlugin);
 	}
 
