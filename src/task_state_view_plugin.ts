@@ -7,6 +7,7 @@ import {
 	type PluginValue,
 	ViewPlugin,
 	ViewUpdate,
+	type PluginSpec,
 } from "@codemirror/view";
 import { TaskStateWidget } from "./task_state_widget";
 import { type LogLevel, logWithNamespace } from "./log";
@@ -90,7 +91,7 @@ class TaskStateViewValue implements PluginValue {
 		logWithNamespace(namespace, level, ...messages);
 	}
 }
-const pluginSpec = {
+const pluginSpec: PluginSpec<TaskStateViewValue> = {
 	decorations: (value: TaskStateViewValue) => value.decorations,
 };
 
