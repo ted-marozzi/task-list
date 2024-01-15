@@ -11,9 +11,6 @@
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-
-	/* margin-inline-start: calc(var(--checkbox-size) * -1.5); */
-	/* margin-inline-end: var(--checkbox-margin-end); */
 }
 
 /* Done icon is mostly purple to provide a strong visual indication that the task is complete */
@@ -22,7 +19,7 @@
 	background-color: var(--interactive-accent);
 }
 
-.task-state-icon-box[data-state="done"]:hover {
+.task-state-icon-box[data-state="done"].interactive:hover {
 	background-color: var(--interactive-accent-hover);
 }
 
@@ -34,7 +31,7 @@
 	border: 1px solid var(--checkbox-border-color);
 }
 
-.task-state-icon-box:not([data-state="done"]):hover {
+.task-state-icon-box:not([data-state="done"]).interactive:hover {
 	color: var(--interactive-accent-hover);
 
 	border-color: var(--checkbox-border-color-hover);

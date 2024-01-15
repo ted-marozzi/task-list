@@ -29,7 +29,7 @@ export class TaskStateWidget extends WidgetType {
 	}
 
 	toDOM(editorView: EditorView): HTMLElement {
-		const iconBox = getTaskStateIconBox(this.taskState.iconName);
+		const iconBox = getTaskStateIconBox({ iconName: this.taskState.iconName, interactive: true });
 
 		const menu = new Menu();
 

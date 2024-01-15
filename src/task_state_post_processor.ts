@@ -5,7 +5,7 @@ import { getTaskStateIconBox } from "./elements";
 
 export function renderTaskStateInReadingMode(
 	element: HTMLElement,
-	context: MarkdownPostProcessorContext
+	_: MarkdownPostProcessorContext
 ) {
 	const listItems = element.findAll("li:not(.task-list-item)");
 
@@ -16,7 +16,9 @@ export function renderTaskStateInReadingMode(
 			continue;
 		}
 		const directive = getTaskStateDirective(taskState.name);
-		listItem.innerText = text.trimStart().replace(directive, "");
-		listItem.prepend(getTaskStateIconBox(taskState.iconName));
+		listItem.replaceChildren(
+			getTaskStateIconBox({ iconName: taskState.iconName, interactive: false }),
+			text.trimStart().replace(directive, "")
+		);
 	}
 }

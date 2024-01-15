@@ -1,6 +1,12 @@
 import { setIcon } from "obsidian";
 
-export function getTaskStateIconBox(iconName: string | null) {
+export function getTaskStateIconBox({
+	iconName,
+	interactive,
+}: {
+	iconName: string | null;
+	interactive: boolean;
+}) {
 	const iconBox = document.createElement("span");
 
 	if (iconName !== null) {
@@ -13,7 +19,7 @@ export function getTaskStateIconBox(iconName: string | null) {
 		iconBox.appendChild(emptyIcon);
 	}
 
-	iconBox.className = "task-state-icon-box";
+	iconBox.className = `task-state-icon-box ${interactive ? "interactive" : ""}`;
 	iconBox.dataset.state = this.taskStateName;
 
 	return iconBox;
