@@ -14,6 +14,10 @@ A simple obsidian plugin enabling better task management via lists.
     - :done I am done
   ```
 
+  These will render like so
+
+  <img src="./assets/supported-task-states.png" alt="Supported task states" width=200 />
+
 - [x] Click a state box to cycle to the next state
 - [x] Right click the state box to select mark a different state
 - [x] Lists are automatically sorted when a state changes but can be manually sorted with the "Task list: Sort tasks" command
