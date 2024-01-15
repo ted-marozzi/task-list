@@ -11,8 +11,8 @@ import {
 } from "@codemirror/view";
 import { TaskStateWidget } from "./task_state_widget";
 import { type LogLevel, logWithNamespace } from "./log";
-import { getTaskStateDirective, taskStates } from "./task_state";
-import { isValidList } from "./base";
+import { getTaskStateDirective } from "./task_state";
+import { getTaskStateFromText, isValidList } from "./base";
 
 class TaskStateViewValue implements PluginValue {
 	name = "TaskStateViewValue";
@@ -42,10 +42,7 @@ class TaskStateViewValue implements PluginValue {
 						return;
 					}
 					const listItemText = editorView.state.doc.slice(node.from, node.to).toString();
-					const taskState = Object.values(taskStates).find(({ name }) =>
-						listItemText.trimStart().startsWith(getTaskStateDirective(name))
-					);
-
+					const taskState = getTaskStateFromText(listItemText);
 					if (taskState === undefined) {
 						return;
 					}

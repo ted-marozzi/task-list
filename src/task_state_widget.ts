@@ -5,9 +5,10 @@ import {
 	type TaskStateDirective,
 	getTaskStateDirective,
 } from "./task_state";
-import { Menu, setIcon } from "obsidian";
+import { Menu } from "obsidian";
 import { type LogLevel, logWithNamespace } from "./log";
 import { sortTaskList } from "./sort_list";
+import { getTaskStateIconBox } from "./elements";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
@@ -28,7 +29,7 @@ export class TaskStateWidget extends WidgetType {
 	}
 
 	toDOM(editorView: EditorView): HTMLElement {
-		const iconBox = this.getTaskStateIconBox();
+		const iconBox = getTaskStateIconBox(this.taskState.iconName);
 
 		const menu = new Menu();
 
@@ -74,26 +75,6 @@ export class TaskStateWidget extends WidgetType {
 				to: sortedDoc.length,
 			},
 		});
-	}
-
-	getTaskStateIconBox() {
-		const iconBox = document.createElement("span");
-
-		const iconName = this.taskState.iconName;
-		if (iconName !== null) {
-			setIcon(iconBox, iconName);
-		} else {
-			const emptyIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			emptyIcon.setAttributeNS("http://www.w3.org/2000/svg", "width", "24");
-			emptyIcon.setAttributeNS("http://www.w3.org/2000/svg", "height", "24");
-			emptyIcon.addClass("svg-icon");
-			iconBox.appendChild(emptyIcon);
-		}
-
-		iconBox.className = "task-state-icon-box";
-		iconBox.dataset.state = this.taskStateName;
-
-		return iconBox;
 	}
 
 	log(level: LogLevel, ...messages: Array<unknown>) {
