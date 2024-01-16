@@ -2,8 +2,10 @@ import type { MarkdownPostProcessorContext } from "obsidian";
 import { getTaskStateFromText } from "./base";
 import { getTaskStateDirective } from "./task_state";
 import { getTaskStateIconBox } from "./elements";
+import { type LogLevel, logWithNamespace } from "./log";
 
 export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProcessorContext) {
+	log("info", "Rendering reading view task states.");
 	const listItems = element.findAll("li:not(.task-list-item)");
 
 	for (const listItem of listItems) {
@@ -31,4 +33,9 @@ export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProc
 			iconInserted = true;
 		});
 	}
+}
+
+function log(level: LogLevel, ...messages: Array<unknown>) {
+	const namespace = `[Task state post processor]`;
+	logWithNamespace(namespace, level, ...messages);
 }
