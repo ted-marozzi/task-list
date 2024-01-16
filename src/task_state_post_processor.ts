@@ -7,15 +7,28 @@ export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProc
 	const listItems = element.findAll("li:not(.task-list-item)");
 
 	for (const listItem of listItems) {
-		const text = listItem.innerText;
-		const taskState = getTaskStateFromText(text);
-		if (taskState === undefined) {
-			continue;
-		}
-		const directive = getTaskStateDirective(taskState.name);
-		listItem.replaceChildren(
-			getTaskStateIconBox({ taskState: taskState, interactive: false }),
-			text.trimStart().replace(directive, "")
-		);
+		let iconInserted = false;
+		listItem.childNodes.forEach((child) => {
+			if (iconInserted || child.nodeType !== Node.TEXT_NODE) {
+				return;
+			}
+			const taskState = getTaskStateFromText(child.nodeValue ?? "");
+			if (taskState === undefined) {
+				return;
+			}
+			const directive = getTaskStateDirective(taskState.name);
+			if (child.nodeValue === null) {
+				return;
+			}
+
+			child.nodeValue = child.nodeValue.replace(directive, "");
+
+			listItem.insertBefore(
+				getTaskStateIconBox({ taskState: taskState, interactive: false }),
+				child
+			);
+
+			iconInserted = true;
+		});
 	}
 }
