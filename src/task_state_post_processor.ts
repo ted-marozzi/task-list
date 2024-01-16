@@ -17,7 +17,7 @@ export function renderTaskStateInReadingMode(
 		}
 		const directive = getTaskStateDirective(taskState.name);
 		listItem.replaceChildren(
-			getTaskStateIconBox({ iconName: taskState.iconName, interactive: false }),
+			getTaskStateIconBox({ taskState: taskState, interactive: false }),
 			text.trimStart().replace(directive, "")
 		);
 	}

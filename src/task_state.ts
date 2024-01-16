@@ -8,7 +8,7 @@ export type TaskState = {
 	contextMenuTitle: string;
 };
 
-export const taskStates: Record<string, TaskState> = {
+export const taskStates = {
 	["to-do"]: {
 		name: "to-do",
 		nextStateName: "doing",

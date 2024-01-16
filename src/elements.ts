@@ -1,16 +1,17 @@
 import { setIcon } from "obsidian";
+import type { TaskState } from "./task_state";
 
 export function getTaskStateIconBox({
-	iconName,
+	taskState,
 	interactive,
 }: {
-	iconName: string | null;
+	taskState: TaskState;
 	interactive: boolean;
 }) {
 	const iconBox = document.createElement("span");
 
-	if (iconName !== null) {
-		setIcon(iconBox, iconName);
+	if (taskState.iconName !== null) {
+		setIcon(iconBox, taskState.iconName);
 	} else {
 		const emptyIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		emptyIcon.setAttributeNS("http://www.w3.org/2000/svg", "width", "24");
@@ -19,8 +20,12 @@ export function getTaskStateIconBox({
 		iconBox.appendChild(emptyIcon);
 	}
 
-	iconBox.className = `task-state-icon-box ${interactive ? "interactive" : ""}`;
-	iconBox.dataset.state = this.taskStateName;
+	iconBox.addClass("task-state-icon-box");
+	if (interactive) {
+		iconBox.addClass("interactive");
+	}
+
+	iconBox.dataset.state = taskState.name;
 
 	return iconBox;
 }

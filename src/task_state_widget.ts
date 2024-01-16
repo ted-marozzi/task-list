@@ -4,6 +4,7 @@ import {
 	type TaskStateName,
 	type TaskStateDirective,
 	getTaskStateDirective,
+	type TaskState,
 } from "./task_state";
 import { Menu } from "obsidian";
 import { type LogLevel, logWithNamespace } from "./log";
@@ -17,8 +18,8 @@ export type TaskStateWidgetConstructorArgs = {
 
 export class TaskStateWidget extends WidgetType {
 	name = "TaskStateWidget";
-	taskStateName;
-	taskState;
+	taskStateName: TaskStateName;
+	taskState: TaskState;
 	directiveRange;
 
 	constructor({ taskStateName, directiveRange }: TaskStateWidgetConstructorArgs) {
@@ -29,21 +30,21 @@ export class TaskStateWidget extends WidgetType {
 	}
 
 	toDOM(editorView: EditorView): HTMLElement {
-		const iconBox = getTaskStateIconBox({ iconName: this.taskState.iconName, interactive: true });
+		const iconBox = getTaskStateIconBox({ taskState: this.taskState, interactive: true });
 
 		const menu = new Menu();
 
-		const otherTaskStates = Object.entries(taskStates).filter(
-			([taskStateName]) => taskStateName !== this.taskStateName
+		const otherTaskStates = Object.values(taskStates).filter(
+			(taskState) => taskState.name !== this.taskStateName
 		);
 
-		for (const [taskStateName, taskState] of otherTaskStates) {
+		for (const otherTaskState of otherTaskStates) {
 			menu.addItem((item) =>
 				item
-					.setTitle(taskState.contextMenuTitle)
-					.setIcon(taskState.iconName)
+					.setTitle(otherTaskState.contextMenuTitle)
+					.setIcon(otherTaskState.iconName)
 					.onClick(() => {
-						this.replaceDirective(editorView, getTaskStateDirective(taskStateName));
+						this.replaceDirective(editorView, getTaskStateDirective(otherTaskState.name));
 					})
 			);
 		}
@@ -59,6 +60,7 @@ export class TaskStateWidget extends WidgetType {
 	}
 
 	async replaceDirective(editorView: EditorView, taskStateDirective: TaskStateDirective) {
+		this.log("info", `replacing task directive with ${taskStateDirective}`);
 		editorView.dispatch({
 			changes: {
 				insert: taskStateDirective,
@@ -66,13 +68,13 @@ export class TaskStateWidget extends WidgetType {
 				to: this.directiveRange.to,
 			},
 		});
-
-		const sortedDoc = await sortTaskList(editorView.state.doc.toString());
+		const originalDocValue = editorView.state.doc.toString();
+		const sortedDoc = await sortTaskList(originalDocValue);
 		editorView.dispatch({
 			changes: {
 				insert: sortedDoc,
 				from: 0,
-				to: sortedDoc.length,
+				to: originalDocValue.length,
 			},
 		});
 	}
