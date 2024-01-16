@@ -3,10 +3,7 @@ import { getTaskStateFromText } from "./base";
 import { getTaskStateDirective } from "./task_state";
 import { getTaskStateIconBox } from "./elements";
 
-export function renderTaskStateInReadingMode(
-	element: HTMLElement,
-	_: MarkdownPostProcessorContext
-) {
+export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProcessorContext) {
 	const listItems = element.findAll("li:not(.task-list-item)");
 
 	for (const listItem of listItems) {
