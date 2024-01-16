@@ -10,9 +10,12 @@ export default class TaskList extends Plugin {
 		this.addCommand(getSortTaskListCommand(this));
 		this.registerEditorExtension(taskStateViewPlugin);
 		this.registerMarkdownPostProcessor(renderTaskStateInReadingMode);
+		this.log("info", "loaded");
 	}
 
-	onunload() {}
+	onunload() {
+		this.log("info", "unloaded");
+	}
 
 	log(level: LogLevel, ...messages: Array<unknown>) {
 		const namespace = `[${this.name}]`;
