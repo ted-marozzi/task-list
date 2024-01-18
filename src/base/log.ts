@@ -7,19 +7,22 @@ export function logWithNamespace(
 	level: LogLevel,
 	...messages: Array<unknown>
 ) {
-	const log = [appName, ...messages];
+	const logPrefix = [appName];
 	if (namespace !== null) {
-		log.splice(1, 0, namespace);
+		logPrefix.push(namespace);
 	}
+
+	logPrefix.push(`[${level}]`);
+
 	switch (level) {
 		case "info":
-			console.log("[INFO]", ...log);
+			console.log(...logPrefix, ...messages);
 			break;
 		case "warn":
-			console.warn("[WARN]", ...log);
+			console.warn(...logPrefix, ...messages);
 			break;
 		case "error":
-			console.error("[ERROR]", ...log);
+			console.error(...logPrefix, ...messages);
 			break;
 	}
 }

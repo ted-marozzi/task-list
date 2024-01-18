@@ -1,5 +1,5 @@
 import { setIcon } from "obsidian";
-import type { TaskState } from "./task_state";
+import type { TaskState } from "../task_state/task_states";
 
 export function getTaskStateIconBox({
 	taskState,

@@ -5,11 +5,11 @@ import {
 	type TaskStateDirective,
 	getTaskStateDirective,
 	type TaskState,
-} from "./task_state";
+} from "./task_states";
 import { Menu } from "obsidian";
-import { type LogLevel, logWithNamespace } from "./log";
-import { sortTaskList } from "./sort_list";
-import { getTaskStateIconBox } from "./elements";
+import { type LogLevel, logWithNamespace } from "../base/log";
+import { sortTaskList } from "../sort_task_list";
+import { getTaskStateIconBox } from "../base/elements";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
@@ -68,15 +68,8 @@ export class TaskStateWidget extends WidgetType {
 				to: this.directiveRange.to,
 			},
 		});
-		const originalDocValue = editorView.state.doc.toString();
-		const sortedDoc = await sortTaskList(originalDocValue);
-		editorView.dispatch({
-			changes: {
-				insert: sortedDoc,
-				from: 0,
-				to: originalDocValue.length,
-			},
-		});
+
+		await sortTaskList(editorView);
 	}
 
 	log(level: LogLevel, ...messages: Array<unknown>) {

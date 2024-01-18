@@ -12,7 +12,7 @@ export const taskStates = {
 	["to-do"]: {
 		name: "to-do",
 		nextStateName: "doing",
-		sortOrder: 2,
+		sortOrder: 3,
 		iconName: null,
 		contextMenuTitle: "Mark 'To do'",
 	},
@@ -26,7 +26,7 @@ export const taskStates = {
 	["paused"]: {
 		name: "paused",
 		nextStateName: "to-do",
-		sortOrder: 3,
+		sortOrder: 2,
 		iconName: "pause",
 		contextMenuTitle: "Mark 'Paused'",
 	},
@@ -48,4 +48,10 @@ export function getTaskStateName(taskStateDirective: TaskStateDirective): TaskSt
 
 export function getTaskStateDirective(taskStateName: TaskStateName): TaskStateDirective {
 	return `:${taskStateName}`;
+}
+
+export function getTaskStateFromText(text: string) {
+	return Object.values(taskStates).find(({ name }) =>
+		text.trimStart().startsWith(getTaskStateDirective(name))
+	);
 }
