@@ -8,8 +8,8 @@ import {
 } from "./task_states";
 import { Menu } from "obsidian";
 import { type LogLevel, logWithNamespace } from "../base/log";
-import { sortTaskList } from "../sort_task_list";
 import { getTaskStateIconBox } from "../base/elements";
+import { sortTaskList } from "src/sort_list/sort_task_list";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;

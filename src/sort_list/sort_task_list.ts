@@ -1,30 +1,12 @@
-import { MarkdownView, type Command } from "obsidian";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import remarkDirective from "remark-directive";
-import type TaskList from "./main";
 import { EXIT, visit } from "unist-util-visit";
 import type { Root } from "remark-gfm/lib";
-import { taskStates, type TaskStateName } from "./task_state/task_states";
-import { logWithNamespace, type LogLevel } from "./base/log";
 import type { EditorView } from "@codemirror/view";
+import { taskStates, type TaskStateName } from "src/task_state/task_states";
+import { logWithNamespace, type LogLevel } from "src/base/log";
 import type { ListItem, List } from "mdast";
-
-export function getSortTaskListCommand(taskList: TaskList): Command {
-	return {
-		id: "sort-list",
-		name: "Sort list",
-		editorCallback: async (editor) => {
-			const view = taskList.app.workspace.getActiveViewOfType(MarkdownView);
-			if (view === null) {
-				log("info", "Unable to Sort lists as the current file is not a markdown file.");
-				return;
-			}
-
-			await sortTaskList(editor.cm);
-		},
-	};
-}
 
 export async function sortTaskList(editorView: EditorView): Promise<void> {
 	log("info", "Running command");
@@ -154,6 +136,6 @@ function getState(listItem: ListItem): TaskStateName | null {
 }
 
 function log(level: LogLevel, ...messages: Array<unknown>) {
-	const namespace = `[Sort list]`;
+	const namespace = `[Sort task list]`;
 	logWithNamespace(namespace, level, ...messages);
 }
