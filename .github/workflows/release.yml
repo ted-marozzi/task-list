@@ -17,12 +17,10 @@ jobs:
         with:
           node-version: "18.x"
 
-      - name: Build and test
+      - name: Test and build
         run: |
           npm install
-          npm run lint
-          npm run test
-          npm run build
+          npm run ci
 
       - name: Create release
         env:

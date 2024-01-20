@@ -7,8 +7,9 @@
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"lint": "tsc -noEmit -skipLibCheck && eslint ./src",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"test": "vitest"
+		"test": "vitest",
+		"build": "node esbuild.config.mjs production",
+		"ci": "npm run lint && npm run test -- run && npm run build"
 	},
 	"keywords": [],
 	"author": "Ted Marozzi",
