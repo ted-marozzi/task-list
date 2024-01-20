@@ -3,7 +3,7 @@ import { MarkdownView, type Command } from "obsidian";
 import type TaskList from "../main";
 import { logWithNamespace, type LogLevel } from "../base/log";
 
-import { sortTaskList } from "./sort_task_list";
+import { sortTaskList } from "@src/sort_list/sort_task_list";
 
 export function getSortTaskListCommand(taskList: TaskList): Command {
 	return {

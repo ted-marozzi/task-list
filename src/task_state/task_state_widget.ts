@@ -5,11 +5,11 @@ import {
 	type TaskStateDirective,
 	getTaskStateDirective,
 	type TaskState,
-} from "./task_states";
+} from "@src/task_state/task_states";
 import { Menu } from "obsidian";
 import { type LogLevel, logWithNamespace } from "../base/log";
 import { getTaskStateIconBox } from "../base/elements";
-import { sortTaskList } from "src/sort_list/sort_task_list";
+import { sortTaskList } from "@src/sort_list/sort_task_list";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
