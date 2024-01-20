@@ -10,7 +10,7 @@
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "Ted Marozzi",
 	"license": "MIT",
 	"dependencies": {
 		"@codemirror/language": "^6.10.0",

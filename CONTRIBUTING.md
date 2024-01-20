@@ -14,9 +14,10 @@ See https://github.com/obsidianmd/obsidian-api
 
 ## Releasing new releases
 
-1. Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-1. Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-1. Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
+1. Update the `manifest.json` with the new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
+1. Update the `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of the plugin that's compatible.
+1. Update the `package.json` with the new version number.
+1. Create a git tag such as `git tag -a 1.0.1 -m "1.0.1" && git push origin 1.0.1`
 1. Upload the files `manifest.json`, `main.js` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
 1. Publish the release.
 
