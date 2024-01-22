@@ -2,7 +2,6 @@ import { getRemark } from "@src/base/remark";
 import type { Root } from "remark-gfm/lib";
 
 export function isListItemPrefix(line: string): boolean {
-	console.log(`line '${line}'`);
 	let result = false;
 	getRemark()
 		.use(() => (root: Root) => {
@@ -25,7 +24,6 @@ export function isListItemPrefix(line: string): boolean {
 			}
 
 			result = true;
-			console.log("true as li");
 		})
 		.processSync(line);
 
