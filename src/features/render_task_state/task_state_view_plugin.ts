@@ -9,10 +9,10 @@ import {
 	ViewUpdate,
 	type PluginSpec,
 } from "@codemirror/view";
-import { TaskStateWidget } from "@src/task_state/task_state_widget";
-import { type LogLevel, logWithNamespace } from "../base/log";
-import { getTaskStateDirective, getTaskStateFromText } from "@src/task_state/task_states";
-import { isValidList } from "../base/tree";
+import { TaskStateWidget } from "@src/features/render_task_state/task_state_widget";
+import { type LogLevel, logWithNamespace } from "@src/base/log";
+import { getTaskStateDirective, getTaskStateFromText } from "@src/base/task_states";
+import { isValidList } from "@src/base/tree";
 
 class TaskStateViewValue implements PluginValue {
 	name = "TaskStateViewValue";

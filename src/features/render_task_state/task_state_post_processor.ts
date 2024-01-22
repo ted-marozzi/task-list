@@ -1,7 +1,7 @@
 import type { MarkdownPostProcessorContext } from "obsidian";
-import { getTaskStateDirective, getTaskStateFromText } from "@src/task_state/task_states";
+import { getTaskStateDirective, getTaskStateFromText } from "@src/base/task_states";
 import { getTaskStateIconBox } from "@src/base/elements";
-import { type LogLevel, logWithNamespace } from "../base/log";
+import { type LogLevel, logWithNamespace } from "@src/base/log";
 
 export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProcessorContext) {
 	log("info", "Rendering reading view task states.");

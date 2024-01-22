@@ -1,12 +1,12 @@
-import { remark } from "remark";
-import remarkGfm from "remark-gfm";
-import remarkDirective from "remark-directive";
 import { EXIT, visit } from "unist-util-visit";
 import type { Root } from "remark-gfm/lib";
 import type { EditorView } from "@codemirror/view";
-import { taskStates, type TaskStateName } from "@src/task_state/task_states";
-import { logWithNamespace, type LogLevel } from "../base/log";
+import { taskStates, type TaskStateName } from "@src/base/task_states";
+import { logWithNamespace, type LogLevel } from "@src/base/log";
 import type { ListItem, List } from "mdast";
+import remarkGfm from "remark-gfm";
+import remarkDirective from "remark-directive";
+import { remark } from "remark";
 
 export async function sortTaskList(editorView: EditorView): Promise<void> {
 	log("info", "Running command");

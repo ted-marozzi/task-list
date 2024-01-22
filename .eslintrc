@@ -22,7 +22,7 @@
 			{
 				"patterns": [
 					{
-						"group": ["./*"],
+						"group": ["./*", "../*"],
 						"message": "Always use absolute import paths."
 					}
 				]

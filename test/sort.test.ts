@@ -1,7 +1,7 @@
 import { EditorView } from "@codemirror/view";
 import { describe, it, expect } from "vitest";
 import { replaceEditorContent } from "@test/base";
-import { sortTaskList } from "@src/sort_list/sort_task_list";
+import { sortTaskList } from "@src/features/sort_task_list/sort";
 
 describe("sortTaskList", () => {
 	const editorView = new EditorView();
