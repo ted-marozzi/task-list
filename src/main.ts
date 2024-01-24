@@ -13,7 +13,7 @@ export default class TaskList extends Plugin {
 			this.app.workspace.on("editor-menu", (menu, editor, _view) => {
 				menu.addItem((item) => {
 					item.setTitle("Task list: Sort lists").onClick(async () => {
-						await sortTaskList(editor.cm);
+						await sortTaskList({ editorView: editor.cm });
 					});
 				});
 			})

@@ -18,7 +18,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing Doing
 * :paused Paused
@@ -40,7 +40,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 1. :doing Doing
 2. :paused Paused
@@ -68,7 +68,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing Doing
 * :paused Paused
@@ -106,7 +106,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing List item with unordered children
 	* :doing Finish me!
@@ -138,7 +138,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 1. :doing Doing
 3. :paused Paused
@@ -165,7 +165,7 @@ describe("sortTaskList", () => {
 `
 		);
 
-		await sortTaskList(editorView);
+		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 1. :doing Doing
 3. :to-do To do

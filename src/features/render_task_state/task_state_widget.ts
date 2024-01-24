@@ -10,23 +10,27 @@ import { Menu } from "obsidian";
 import { type LogLevel, logWithNamespace } from "@src/base/log";
 import { getTaskStateIconBox } from "@src/base/elements";
 import { sortTaskList } from "@src/features/sort_task_list/sort";
+import type { Position } from "unist";
 
 export type TaskStateWidgetConstructorArgs = {
 	taskStateName: TaskStateName;
-	directiveRange: { from: number; to: number };
+	directivePosition: Position;
+	listPosition: Position;
 };
 
 export class TaskStateWidget extends WidgetType {
 	name = "TaskStateWidget";
 	taskStateName: TaskStateName;
 	taskState: TaskState;
-	directiveRange;
+	directivePosition;
+	listPosition;
 
-	constructor({ taskStateName, directiveRange }: TaskStateWidgetConstructorArgs) {
+	constructor({ taskStateName, directivePosition, listPosition }: TaskStateWidgetConstructorArgs) {
 		super();
 		this.taskStateName = taskStateName;
 		this.taskState = taskStates[this.taskStateName];
-		this.directiveRange = directiveRange;
+		this.directivePosition = directivePosition;
+		this.listPosition = listPosition;
 	}
 
 	toDOM(editorView: EditorView): HTMLElement {
@@ -40,8 +44,7 @@ export class TaskStateWidget extends WidgetType {
 
 		menu.addItem((item) => {
 			item.setTitle("Sort list").onClick(async () => {
-				// TODO only sort this one
-				await sortTaskList(editorView);
+				await sortTaskList({ editorView, position: this.listPosition });
 			});
 		});
 
@@ -66,12 +69,16 @@ export class TaskStateWidget extends WidgetType {
 	}
 
 	async replaceDirective(editorView: EditorView, taskStateDirective: TaskStateDirective) {
-		this.log("info", `replacing task directive with ${taskStateDirective}`);
+		this.log("info", `Replacing task directive with ${taskStateDirective}`);
+		if (!this.directivePosition.start.offset || !this.directivePosition.end.offset) {
+			this.log("error", "Unable to replace task directive as its position is unknown.");
+			return;
+		}
 		editorView.dispatch({
 			changes: {
 				insert: taskStateDirective,
-				from: this.directiveRange.from,
-				to: this.directiveRange.to,
+				from: this.directivePosition.start.offset,
+				to: this.directivePosition.end.offset,
 			},
 		});
 	}

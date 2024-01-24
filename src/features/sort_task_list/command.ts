@@ -16,7 +16,7 @@ export function getSortTaskListCommand(taskList: TaskList): Command {
 				return;
 			}
 
-			await sortTaskList(editor.cm);
+			await sortTaskList({ editorView: editor.cm });
 		},
 	};
 }

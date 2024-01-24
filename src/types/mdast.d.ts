@@ -1,11 +1,11 @@
 import "mdast";
 
-type Location = { line: number; column: number; offset: number };
+import type { Position } from "mdast";
 
 type TextDirective = {
 	type: "textDirective";
 	name: string;
-	position: { start: Location; end: Location };
+	position: Position;
 };
 
 declare module "mdast" {

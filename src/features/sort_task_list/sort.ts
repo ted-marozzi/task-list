@@ -5,31 +5,50 @@ import { taskStates } from "@src/base/task_states";
 import { logWithNamespace, type LogLevel } from "@src/base/log";
 import type { List } from "mdast";
 import { getRemark, getTaskStateDirective } from "@src/base/tree";
+import type { Position } from "unist";
 
-export async function sortTaskList(editorView: EditorView): Promise<void> {
+export async function sortTaskList({
+	editorView,
+	position,
+}: {
+	editorView: EditorView;
+	position?: Position;
+}): Promise<void> {
 	log("info", "Running command");
 
 	await getRemark()
-		.use(() => sortTasks(editorView))
+		.use(() => sortTasks({ editorView, position }))
 		.process(editorView.state.doc.toString());
 }
 
-function sortTasks(editorView: EditorView) {
+function sortTasks({ editorView, position }: { editorView: EditorView; position?: Position }) {
 	return (root: Root) => {
-		let listWasSorted = false;
+		let aListWasSorted = false;
+
 		visit(root, "list", (list) => {
+			if (
+				position?.start.offset !== undefined &&
+				position?.end.offset !== undefined &&
+				list.position?.start.offset !== undefined &&
+				list.position?.end.offset !== undefined &&
+				(list.position.start.offset < position.start.offset ||
+					list.position?.end.offset > position.end.offset)
+			) {
+				return;
+			}
 			assignChildIndices(list);
 			sortChildren(list);
 
 			const transactionSpecs = getTransactionSpecs(list, editorView);
 			if (transactionSpecs.length > 0) {
 				editorView.dispatch(...transactionSpecs);
-				listWasSorted = true;
+				aListWasSorted = true;
 				return EXIT;
 			}
 		});
-		if (listWasSorted) {
-			sortTaskList(editorView);
+
+		if (aListWasSorted) {
+			sortTaskList({ editorView, position });
 		}
 	};
 }
