@@ -3,7 +3,7 @@ import {
 	taskStates,
 	type TaskStateName,
 	type TaskStateDirective,
-	getTaskStateDirective,
+	getTaskStateDirectiveName,
 	type TaskState,
 } from "@src/base/task_states";
 import { Menu } from "obsidian";
@@ -38,14 +38,20 @@ export class TaskStateWidget extends WidgetType {
 			(taskState) => taskState.name !== this.taskStateName
 		);
 
+		menu.addItem((item) => {
+			item.setTitle("Sort list").onClick(async () => {
+				// TODO only sort this one
+				await sortTaskList(editorView);
+			});
+		});
+
+		menu.addSeparator();
+
 		for (const otherTaskState of otherTaskStates) {
 			menu.addItem((item) =>
-				item
-					.setTitle(otherTaskState.contextMenuTitle)
-					.setIcon(otherTaskState.iconName)
-					.onClick(() => {
-						this.replaceDirective(editorView, getTaskStateDirective(otherTaskState.name));
-					})
+				item.setTitle(otherTaskState.contextMenuTitle).onClick(() => {
+					this.replaceDirective(editorView, getTaskStateDirectiveName(otherTaskState.name));
+				})
 			);
 		}
 
@@ -53,7 +59,7 @@ export class TaskStateWidget extends WidgetType {
 			menu.showAtMouseEvent(ev);
 		};
 		iconBox.onClickEvent(() => {
-			this.replaceDirective(editorView, getTaskStateDirective(this.taskState.nextStateName));
+			this.replaceDirective(editorView, getTaskStateDirectiveName(this.taskState.nextStateName));
 		});
 
 		return iconBox;
@@ -68,8 +74,6 @@ export class TaskStateWidget extends WidgetType {
 				to: this.directiveRange.to,
 			},
 		});
-
-		await sortTaskList(editorView);
 	}
 
 	log(level: LogLevel, ...messages: Array<unknown>) {

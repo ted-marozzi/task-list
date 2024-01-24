@@ -1,5 +1,5 @@
 import type { MarkdownPostProcessorContext } from "obsidian";
-import { getTaskStateDirective, getTaskStateFromText } from "@src/base/task_states";
+import { getTaskStateDirectiveName, getTaskStateFromText } from "@src/base/task_states";
 import { getTaskStateIconBox } from "@src/base/elements";
 import { type LogLevel, logWithNamespace } from "@src/base/log";
 
@@ -17,7 +17,7 @@ export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProc
 			if (taskState === undefined) {
 				return;
 			}
-			const directive = getTaskStateDirective(taskState.name);
+			const directive = getTaskStateDirectiveName(taskState.name);
 			if (child.nodeValue === null) {
 				return;
 			}

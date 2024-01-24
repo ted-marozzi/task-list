@@ -1,4 +1,3 @@
-import { syntaxTree } from "@codemirror/language";
 import { RangeSetBuilder } from "@codemirror/state";
 import {
 	Decoration,
@@ -9,10 +8,11 @@ import {
 	ViewUpdate,
 	type PluginSpec,
 } from "@codemirror/view";
-import { TaskStateWidget } from "@src/features/render_task_state/task_state_widget";
 import { type LogLevel, logWithNamespace } from "@src/base/log";
-import { getTaskStateDirective, getTaskStateFromText } from "@src/base/task_states";
-import { isValidList } from "@src/base/tree";
+import { getRemark, getTaskStateDirective } from "@src/base/tree";
+import { visit } from "unist-util-visit";
+import type { Root } from "remark-gfm/lib";
+import { TaskStateWidget } from "@src/features/render_task_state/task_state_widget";
 
 class TaskStateViewValue implements PluginValue {
 	name = "TaskStateViewValue";
@@ -34,52 +34,54 @@ class TaskStateViewValue implements PluginValue {
 		const builder = new RangeSetBuilder<Decoration>();
 
 		for (const { from, to } of editorView.visibleRanges) {
-			syntaxTree(editorView.state).iterate({
-				from,
-				to,
-				enter(node) {
-					if (!isValidList(node)) {
-						return;
-					}
-					const listItemText = editorView.state.doc.slice(node.from, node.to).toString();
-					const taskState = getTaskStateFromText(listItemText);
-					if (taskState === undefined) {
-						return;
-					}
+			getRemark()
+				.use(() => (root: Root) => {
+					visit(root, "list", (list) => {
+						for (const listItem of list.children) {
+							const directive = getTaskStateDirective(listItem);
 
-					const directive = getTaskStateDirective(taskState.name);
+							if (directive === null) {
+								return;
+							}
 
-					const selection = editorView.state.selection.main;
+							const isBetween = (point: number, from: number, to: number) =>
+								point >= from && point < to;
 
-					const indexOfDirective = listItemText.indexOf(directive);
+							const selection = editorView.state.selection.main;
 
-					const directiveRange = {
-						from: node.from + indexOfDirective,
-						to: node.from + indexOfDirective + directive.length,
-					};
+							const isPartiallySelected =
+								isBetween(
+									selection.from,
+									directive.position.start.offset,
+									directive.position.end.offset
+								) ||
+								isBetween(
+									selection.to,
+									directive.position.start.offset,
+									directive.position.end.offset
+								) ||
+								(selection.from <= directive.position.start.offset &&
+									selection.to >= directive.position.end.offset);
 
-					const isBetween = (point: number, from: number, to: number) =>
-						point >= from && point <= to;
-
-					const isPartiallySelected =
-						isBetween(selection.from, directiveRange.from, directiveRange.to) ||
-						isBetween(selection.to, directiveRange.from, directiveRange.to) ||
-						(selection.from <= directiveRange.from && selection.to >= directiveRange.to);
-
-					if (!isPartiallySelected) {
-						builder.add(
-							directiveRange.from,
-							directiveRange.to,
-							Decoration.replace({
-								widget: new TaskStateWidget({
-									directiveRange,
-									taskStateName: taskState.name,
-								}),
-							})
-						);
-					}
-				},
-			});
+							if (!isPartiallySelected) {
+								builder.add(
+									directive.position.start.offset,
+									directive.position.end.offset,
+									Decoration.replace({
+										widget: new TaskStateWidget({
+											directiveRange: {
+												from: directive.position.start.offset,
+												to: directive.position.end.offset,
+											},
+											taskStateName: directive.name,
+										}),
+									})
+								);
+							}
+						}
+					});
+				})
+				.process(editorView.state.sliceDoc(from, to));
 		}
 
 		return builder.finish();

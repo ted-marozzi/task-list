@@ -7,8 +7,8 @@ import { sortTaskList } from "@src/features/sort_task_list/sort";
 
 export function getSortTaskListCommand(taskList: TaskList): Command {
 	return {
-		id: "sort-list",
-		name: "Sort list",
+		id: "sort-lists",
+		name: "Sort lists",
 		editorCallback: async (editor) => {
 			const view = taskList.app.workspace.getActiveViewOfType(MarkdownView);
 			if (view === null) {

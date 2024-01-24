@@ -1,26 +1,22 @@
 import { EXIT, visit } from "unist-util-visit";
 import type { Root } from "remark-gfm/lib";
 import type { EditorView } from "@codemirror/view";
-import { taskStates, type TaskStateName } from "@src/base/task_states";
+import { taskStates } from "@src/base/task_states";
 import { logWithNamespace, type LogLevel } from "@src/base/log";
-import type { ListItem, List } from "mdast";
-import remarkGfm from "remark-gfm";
-import remarkDirective from "remark-directive";
-import { remark } from "remark";
+import type { List } from "mdast";
+import { getRemark, getTaskStateDirective } from "@src/base/tree";
 
 export async function sortTaskList(editorView: EditorView): Promise<void> {
 	log("info", "Running command");
 
-	await remark()
-		.use(remarkGfm)
-		.use(remarkDirective)
+	await getRemark()
 		.use(() => sortTasks(editorView))
 		.process(editorView.state.doc.toString());
 }
 
 function sortTasks(editorView: EditorView) {
 	return (root: Root) => {
-		let alreadySorted = false;
+		let listWasSorted = false;
 		visit(root, "list", (list) => {
 			assignChildIndices(list);
 			sortChildren(list);
@@ -28,11 +24,11 @@ function sortTasks(editorView: EditorView) {
 			const transactionSpecs = getTransactionSpecs(list, editorView);
 			if (transactionSpecs.length > 0) {
 				editorView.dispatch(...transactionSpecs);
-				alreadySorted = true;
+				listWasSorted = true;
 				return EXIT;
 			}
 		});
-		if (alreadySorted) {
+		if (listWasSorted) {
 			sortTaskList(editorView);
 		}
 	};
@@ -52,8 +48,8 @@ function assignChildIndices(list: List) {
 
 function sortChildren(list: List) {
 	list.children.sort((a, b) => {
-		const stateA = getState(a);
-		const stateB = getState(b);
+		const stateA = getTaskStateDirective(a);
+		const stateB = getTaskStateDirective(b);
 
 		if (stateA === stateB) {
 			return 0;
@@ -67,8 +63,8 @@ function sortChildren(list: List) {
 			return -1;
 		}
 
-		const sortOrderA = taskStates[stateA].sortOrder;
-		const sortOrderB = taskStates[stateB].sortOrder;
+		const sortOrderA = taskStates[stateA.name].sortOrder;
+		const sortOrderB = taskStates[stateB.name].sortOrder;
 
 		return sortOrderA - sortOrderB;
 	});
@@ -116,23 +112,6 @@ function getTransactionSpecs(list: List, editorView: EditorView) {
 	});
 
 	return transactionSpecs;
-}
-
-function getState(listItem: ListItem): TaskStateName | null {
-	if (
-		(listItem.checked === null || listItem.checked === undefined) &&
-		listItem.children.length > 0 &&
-		listItem.children[0].type === "paragraph" &&
-		listItem.children[0].children.length > 0 &&
-		listItem.children[0].children[0].type === "textDirective"
-	) {
-		const state = listItem.children[0].children[0].name;
-		if (state in taskStates) {
-			return state as TaskStateName;
-		}
-	}
-
-	return null;
 }
 
 function log(level: LogLevel, ...messages: Array<unknown>) {

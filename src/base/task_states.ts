@@ -42,16 +42,18 @@ export const taskStates = {
 export type TaskStateName = keyof typeof taskStates;
 export type TaskStateDirective = `:${TaskStateName}`;
 
-export function getTaskStateName(taskStateDirective: TaskStateDirective): TaskStateName {
+export function getTaskStateNameFromDirective(
+	taskStateDirective: TaskStateDirective
+): TaskStateName {
 	return taskStateDirective.substring(1) as TaskStateName;
 }
 
-export function getTaskStateDirective(taskStateName: TaskStateName): TaskStateDirective {
+export function getTaskStateDirectiveName(taskStateName: TaskStateName): TaskStateDirective {
 	return `:${taskStateName}`;
 }
 
 export function getTaskStateFromText(text: string) {
 	return Object.values(taskStates).find(({ name }) =>
-		text.trimStart().startsWith(getTaskStateDirective(name))
+		text.trimStart().startsWith(getTaskStateDirectiveName(name))
 	);
 }
