@@ -6,7 +6,7 @@ A simple obsidian plugin enabling better task management via lists.
 
 - [x] Create lists with task states
 
-  - Simply start an ordered or unordered list and then add one of the following states, :to-do, :doing, :paused, :done
+  - Simply start an ordered or unordered list and then add one of the following directives, :to-do, :doing, :paused, :done
 
   ```md
   - Supported task states
@@ -31,6 +31,7 @@ A simple obsidian plugin enabling better task management via lists.
   - Click a task state box to cycle to the next state
   - Use the context menu on a task state box to mark a different state
 - [x] Performance focused, a lot of care is taken to ensure task-list doesn't slow down obsidian
+- [x] Extends markdown but doesn't break it, your documents will still render outside of this plugin, with a readable task state and easy to remember directives
 
 # Installation
 
