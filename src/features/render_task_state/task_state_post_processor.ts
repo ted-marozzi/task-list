@@ -5,7 +5,7 @@ import { type LogLevel, logWithNamespace } from "@src/base/log";
 
 export function taskStatePostProcessor(element: HTMLElement, _: MarkdownPostProcessorContext) {
 	log("info", "Rendering reading view task states.");
-	const listItems = element.findAll("li:not(.task-list-item)");
+	const listItems = element.findAll("li");
 
 	for (const listItem of listItems) {
 		let iconInserted = false;

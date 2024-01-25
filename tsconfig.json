@@ -19,7 +19,8 @@
 		"lib": ["DOM", "ES5", "ES6", "ES7"],
 		"outDir": "./build",
 		"skipDefaultLibCheck": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"noImplicitThis": true
 	},
 	"include": ["**/*.ts"]
 }

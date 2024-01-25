@@ -1,6 +1,6 @@
 import "mdast";
 
-import type { Position } from "mdast";
+import type { Position } from "unist";
 
 type TextDirective = {
 	type: "textDirective";
