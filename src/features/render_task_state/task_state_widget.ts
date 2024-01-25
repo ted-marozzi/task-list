@@ -43,18 +43,24 @@ export class TaskStateWidget extends WidgetType {
 		);
 
 		menu.addItem((item) => {
-			item.setTitle("Sort list").onClick(async () => {
-				await sortTaskList({ editorView, position: this.listPosition });
-			});
+			item
+				.setTitle("Sort list")
+				.setIcon("arrow-up-down")
+				.onClick(async () => {
+					await sortTaskList({ editorView, position: this.listPosition });
+				});
 		});
 
 		menu.addSeparator();
 
 		for (const otherTaskState of otherTaskStates) {
 			menu.addItem((item) =>
-				item.setTitle(otherTaskState.contextMenuTitle).onClick(() => {
-					this.replaceDirective(editorView, getTaskStateDirectiveName(otherTaskState.name));
-				})
+				item
+					.setTitle(otherTaskState.contextMenuTitle)
+					.setIcon(otherTaskState.iconName)
+					.onClick(() => {
+						this.replaceDirective(editorView, getTaskStateDirectiveName(otherTaskState.name));
+					})
 			);
 		}
 
