@@ -16,7 +16,9 @@ export function logWithNamespace(
 
 	switch (level) {
 		case "info":
-			console.log(...logPrefix, ...messages);
+			if (process.env.NODE_ENV !== "production") {
+				console.log(...logPrefix, ...messages);
+			}
 			break;
 		case "warn":
 			console.warn(...logPrefix, ...messages);
