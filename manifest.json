@@ -3,7 +3,7 @@
 	"name": "Task list",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "A simple obsidian plugin enabling better task management via lists.",
+	"description": "Enable better task management via lists.",
 	"author": "Ted Marozzi",
 	"authorUrl": "https://github.com/ted-marozzi",
 	"fundingUrl": "https://github.com/sponsors/ted-marozzi/",
