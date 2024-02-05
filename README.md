@@ -35,6 +35,8 @@ A simple obsidian plugin enabling better task management via lists.
 
 # Installation
 
+## Build from source
+
 1. Clone this repo to `./vault/.obsidian/plugins`
 1. Run `npm run build`
 1. Start obsidian
