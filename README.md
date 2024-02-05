@@ -42,3 +42,7 @@ A simple obsidian plugin enabling better task management via lists.
 1. Start obsidian
 1. Navigate to Settings > Community plugins
 1. Enable the "Task list" plugin
+
+# Sponsor me
+[If you like this software please consider sponsoring me here ❤️](https://github.com/sponsors/ted-marozzi
+)
