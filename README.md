@@ -35,6 +35,10 @@ A simple obsidian plugin enabling better task management via lists.
 
 # Installation
 
+## Install the lastest release
+
+1. [Click this link and follow the prompts to install](https://obsidian.md/plugins?id=task-list)
+
 ## Build from source
 
 1. Clone this repo to `./vault/.obsidian/plugins`
