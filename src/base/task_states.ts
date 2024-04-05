@@ -12,7 +12,7 @@ export const taskStates = {
 	["to-do"]: {
 		name: "to-do",
 		nextStateName: "doing",
-		sortOrder: 3,
+		sortOrder: 2,
 		iconName: null,
 		contextMenuTitle: "Mark 'To do'",
 	},
@@ -26,7 +26,7 @@ export const taskStates = {
 	["paused"]: {
 		name: "paused",
 		nextStateName: "to-do",
-		sortOrder: 2,
+		sortOrder: 3,
 		iconName: "pause",
 		contextMenuTitle: "Mark 'Paused'",
 	},
