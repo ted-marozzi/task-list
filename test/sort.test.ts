@@ -21,8 +21,8 @@ describe("sortTaskList", () => {
 		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing Doing
-* :paused Paused
 * :to-do To do
+* :paused Paused
 * :done Done
 * :done Done
 `);
@@ -43,8 +43,8 @@ describe("sortTaskList", () => {
 		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 1. :doing Doing
-2. :paused Paused
-3. :to-do To do
+2. :to-do To do
+3. :paused Paused
 4. :done Done
 5. :done Done
 `);
@@ -71,14 +71,14 @@ describe("sortTaskList", () => {
 		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing Doing
-* :paused Paused
 * :to-do To do
+* :paused Paused
 * :done Done
 * :done Done
 
 1. :doing Doing
-2. :paused Paused
-3. :to-do To do
+2. :to-do To do
+3. :paused Paused
 4. :done Done
 5. :done Done
 `);
@@ -110,16 +110,16 @@ describe("sortTaskList", () => {
 		expect(editorView.state.doc.toString()).toBe(`
 * :doing List item with unordered children
 	* :doing Finish me!
-	* :paused Paused
 	* :to-do Do me!
+	* :paused Paused
+* :to-do List item without children
 * :paused List item with ordered children
 	1. :doing Doing
-	2. :paused Paused
-	3. :to-do To do
+	2. :to-do To do
+	3. :paused Paused
 	4. :done Done
 	5. :done Done
 * :paused Another list item without children
-* :to-do List item without children
 * :done A list item without children that has been done
 `);
 	});
@@ -141,8 +141,8 @@ describe("sortTaskList", () => {
 		await sortTaskList({ editorView });
 		expect(editorView.state.doc.toString()).toBe(`
 1. :doing Doing
-3. :paused Paused
-2. :to-do To do
+3. :to-do To do
+2. :paused Paused
 
 
 4. :done Done
